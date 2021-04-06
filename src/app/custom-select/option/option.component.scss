@@ -1,0 +1,41 @@
+:host {
+    display: block;
+    font-size: 14px;
+    padding: 8px 16px;
+    align-items: center;
+    color: #333;
+    background-color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+    cursor: pointer;
+    transition: .15s ease;
+    max-height: 32px;
+
+    &:hover, &.active {
+        background-color: rgb(240, 240, 240);
+    }
+   
+    &.selected {
+      color: #0079cc;
+      background-color: rgb(240, 240, 240);;
+      font-weight: bold;
+
+      &:hover, &.active {
+        outline: none;
+        background-color: rgb(240, 240, 240);;
+     
+      }
+    }
+   
+    &.disabled {
+      color: #93a1aa;
+      cursor: auto;
+   
+      &:hover, &:focus {
+        outline: none;
+        background-color: rgb(240, 240, 240);;
+      }
+    }
+  }

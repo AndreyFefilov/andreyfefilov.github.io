@@ -1,0 +1,50 @@
+<div class="app">
+    <header class="header">
+        <div class="header__wrapper">
+            <img class="header__logo"  [src]="logoPath" alt="Rubius logo">
+            <span class="header__title">Задание по ИПР - Custom Select</span>
+        </div>
+    </header>
+
+    <div class="app__wrapper">
+        <div class="app__main">
+            <perfect-scrollbar>
+                <div class="app__content">
+                    <custom-select
+                        [required]="true"
+                        label="Список"
+                        placeholder="Выберите значение из списка"
+                        [disabled]="disableSelect"
+                    >
+                        <custom-option value="1">ABC</custom-option>
+                        <custom-option value="2">sdsdf</custom-option>
+                        <custom-option value="3">LKJHsdasf</custom-option>
+                        <custom-option value="4">erwr</custom-option>
+                        <custom-option value="5">000000</custom-option>
+                        <custom-option value="6">LKJHsdasf000000 LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf</custom-option>
+                        <custom-option value="7">000000</custom-option>
+                        <custom-option value="8">000000</custom-option>
+                    </custom-select>
+
+                    <button style="width: 80px; margin-top: 14px" (click)="toggleDisableSelect()">{{ disableSelect ? 'Вкл' : 'Выкл' }}</button>
+                    
+                    <custom-select
+                        label="Список шириной 300px"
+                        placeholder="Выберите значение из списка"
+                        width="300"
+                        style="margin-top: 40px;"
+                    >
+                        <custom-option value="1">ABC</custom-option>
+                        <custom-option value="2">sdsdf</custom-option>
+                        <custom-option value="3">LKJHsdasf</custom-option>
+                        <custom-option value="4">erwr</custom-option>
+                        <custom-option value="5">000000</custom-option>
+                        <custom-option value="6">LKJHsdasf000000 LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf</custom-option>
+                        <custom-option value="7">000000</custom-option>
+                        <custom-option value="8">000000</custom-option>
+                    </custom-select>
+                </div>
+            </perfect-scrollbar>
+        </div>
+    </div>
+</div>
