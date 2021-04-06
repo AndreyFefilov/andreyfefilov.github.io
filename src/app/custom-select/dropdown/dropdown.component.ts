@@ -14,7 +14,7 @@ import {
   selector: 'custom-dropdown',
   template: `
   <ng-template cdk-portal="">
-    <ng-content></ng-content>
+    <ng-content #projected></ng-content>
   </ng-template>`
 })
 export class DropdownComponent {

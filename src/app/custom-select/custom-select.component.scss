@@ -50,7 +50,6 @@
             &:disabled {
                 cursor: default;
                 color: #c3cbcf;
-                border: 1px solid #93a1aa;
 
                 &::placeholder {
                     color: #c3cbcf;
@@ -58,7 +57,11 @@
             }
         
             &:disabled + .custom-select__dropdown-icon {
-                color: #93a1aa;
+                color: #c3cbcf;
+
+                svg * {
+                    fill: #c3cbcf;
+                }
             }   
 
             &:not(:disabled):hover {

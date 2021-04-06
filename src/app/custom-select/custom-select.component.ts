@@ -7,13 +7,16 @@ import {
   QueryList,
   ViewChild
 } from '@angular/core';
+
+import { SelectDataTransferService } from '../services/select-data-transfer.service';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { OptionComponent } from './option/option.component';
 
 @Component({
   selector: 'custom-select',
   templateUrl: 'custom-select.component.html',
-  styleUrls: ['custom-select.component.scss']
+  styleUrls: ['custom-select.component.scss'],
+  providers: [SelectDataTransferService]
 })
 export class CustomSelectComponent implements AfterViewInit {
   @ViewChild('selectWrapperRef') public selectWrapperRef: ElementRef;
@@ -33,15 +36,19 @@ export class CustomSelectComponent implements AfterViewInit {
   public selectedOption: OptionComponent;
   public selectText: string;
 
-  constructor() { }
+  constructor(private _selectDataTransferService: SelectDataTransferService) {
+    this._selectDataTransferService.registerSelectComponent(this);
+   }
 
   ngAfterViewInit() {
     if (this.width) {
       this.selectWrapperRef.nativeElement.style.width = `${this.width}px`;
     }
     
-    this.selectedOption = this.selectOptions.toArray().find(option => option.value === this.selectedValue);
-    this.selectText = this.selectedOption ? this.selectedOption.value : '';
+    setTimeout(() => {
+      this.selectedOption = this.selectOptions.toArray().find(option => option.value === this.selectedValue);
+      this.selectText = this.selectedOption ? this.selectedOption.value : '';
+    });
   }
 
   showDropdown() {
@@ -61,10 +68,10 @@ export class CustomSelectComponent implements AfterViewInit {
     }, 10);
   }
 
-  selectOption(option: OptionComponent) {
+  setSelectOption(option: OptionComponent) {
     this.selectedValue = option.value;
     this.selectedOption = option;
-    this.selectText = this.selectedOption ? this.selectedOption.value : '';
+    this.selectText = option.optionText ? option.optionText : '';
     this.dropdown.hideDropdown();
     this.selectInput.nativeElement.focus();
   }
