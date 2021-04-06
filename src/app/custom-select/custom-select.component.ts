@@ -7,6 +7,7 @@ import {
   QueryList,
   ViewChild
 } from '@angular/core';
+import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 
 import { SelectDataTransferService } from '../services/select-data-transfer.service';
 import { DropdownComponent } from './dropdown/dropdown.component';
@@ -38,7 +39,9 @@ export class CustomSelectComponent implements AfterViewInit {
 
   constructor(private _selectDataTransferService: SelectDataTransferService) {
     this._selectDataTransferService.registerSelectComponent(this);
-   }
+  }
+
+  private _keyManager: ActiveDescendantKeyManager<OptionComponent>
 
   ngAfterViewInit() {
     if (this.width) {
@@ -47,13 +50,24 @@ export class CustomSelectComponent implements AfterViewInit {
     
     setTimeout(() => {
       this.selectedOption = this.selectOptions.toArray().find(option => option.value === this.selectedValue);
-      this.selectText = this.selectedOption ? this.selectedOption.value : '';
+      this.selectText = this.selectedOption ? this.selectedOption.optionText : '';
+
+      this._keyManager = new ActiveDescendantKeyManager(this.selectOptions)
+        .withHorizontalOrientation('ltr')
+        .withVerticalOrientation()
+        .withWrap();
     });
   }
 
   showDropdown() {
     this.dropdown.showDropdown();
     this.opened = true;
+
+    if (!this.selectOptions.length) {
+      return;
+    }
+    
+    this.selectedValue ? this._keyManager.setActiveItem(this.selectedOption) : this._keyManager.setFirstItemActive();
   }
 
   onDropdownHide() {
@@ -68,7 +82,33 @@ export class CustomSelectComponent implements AfterViewInit {
     }, 10);
   }
 
+  onKeyDown(event) {
+    if (!this.dropdown.isDropdownShowing) {
+      this.showDropdown();
+      return;
+    }
+
+    if (!this.selectOptions.length) {
+      event.preventDefault();
+      return;
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.selectedOption = this._keyManager.activeItem;
+      this.selectText = this.selectedOption ? this.selectedOption.optionText : '';
+      this.dropdown.hideDropdown();
+    } else if (event.key === 'Escape' || event.key === 'Esc') {
+      this.dropdown.isDropdownShowing && this.dropdown.hideDropdown();
+    } else if (['ArrowUp', 'Up', 'ArrowDown', 'Down', 'ArrowRight', 'Right', 'ArrowLeft', 'Left']
+      .indexOf(event.key) > -1) {
+      this._keyManager.onKeydown(event);
+    } else if (event.key === 'PageUp' || event.key === 'PageDown' || event.key === 'Tab') {
+      this.dropdown.isDropdownShowing && event.preventDefault();
+    }
+  }
+
   setSelectOption(option: OptionComponent) {
+    this._keyManager.setActiveItem(option);
     this.selectedValue = option.value;
     this.selectedOption = option;
     this.selectText = option.optionText ? option.optionText : '';

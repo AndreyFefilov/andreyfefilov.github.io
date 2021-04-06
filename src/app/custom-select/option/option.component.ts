@@ -7,6 +7,7 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
+import { Highlightable } from '@angular/cdk/a11y';
 
 import { SelectDataTransferService } from 'src/app/services/select-data-transfer.service';
 import { CustomSelectComponent } from '../custom-select.component';
@@ -20,11 +21,20 @@ import { CustomSelectComponent } from '../custom-select.component';
   `,
   styleUrls: ['option.component.scss']
 })
-export class OptionComponent implements AfterViewInit {
+export class OptionComponent implements AfterViewInit, Highlightable {
   @Input() public value: string;
   @ViewChild('optionTextRef') optionTextRef: ElementRef;
+
   @HostBinding('class.selected') get selected(): boolean {
     return this._select.selectedOption === this;
+  }
+
+  @HostBinding('class.active') active = false;
+
+  @HostListener('click', ['$event']) onClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this._select.setSelectOption(this);
   }
 
   private _select: CustomSelectComponent;
@@ -40,10 +50,16 @@ export class OptionComponent implements AfterViewInit {
     });
   }
 
-  @HostListener('click', ['$event']) onClick(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this._select.setSelectOption(this);
+  getLabel(): string {
+    return this.optionText;
+  }
+ 
+  setActiveStyles() {
+    this.active = true;
+  }
+ 
+  setInactiveStyles() {
+    this.active = false;
   }
 
 }

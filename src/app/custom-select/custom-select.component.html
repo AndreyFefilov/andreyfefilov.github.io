@@ -9,6 +9,7 @@
             autocomplete="off"
             [class.opened]="opened"
             (click)="onSelectClick($event)"
+            (keydown)="onKeyDown($event)"
         >
       <div class="custom-select__dropdown-icon" [class.opened]="opened" (click)="onSelectClick($event)">
         <svg class="custom-select__arrow" position="after" width="12" height="8" viewBox="0 0 12 8"
