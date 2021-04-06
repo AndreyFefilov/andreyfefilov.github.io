@@ -10,38 +10,42 @@
         <div class="app__main">
             <perfect-scrollbar>
                 <div class="app__content">
-                    <custom-select
+                    <custom-select #mySelect
                         [required]="true"
                         label="Список"
                         placeholder="Выберите значение из списка"
                         [disabled]="disableSelect"
+                        (selectionChange)="logEvent($event)"
                     >
-                        <custom-option value="1">ABC</custom-option>
-                        <custom-option value="2">sdsdf</custom-option>
-                        <custom-option value="3">LKJHsdasf</custom-option>
-                        <custom-option value="4">erwr</custom-option>
-                        <custom-option value="5">000000</custom-option>
-                        <custom-option value="6">LKJHsdasf000000 LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf</custom-option>
-                        <custom-option value="7">000000</custom-option>
-                        <custom-option value="8">000000</custom-option>
+                        <custom-option value="1">Эту</custom-option>
+                        <custom-option value="2">работу</custom-option>
+                        <custom-option value="3">будет</custom-option>
+                        <custom-option value="4">проверять</custom-option>
+                        <custom-option value="5">Костян</custom-option>
+                        <custom-option value="6">Терёхин</custom-option>
+                        <custom-option value="7">LKJHsdas f000000 LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf</custom-option>
+                        <custom-option value="8">001010</custom-option>
                     </custom-select>
 
-                    <button style="width: 80px; margin-top: 14px" (click)="toggleDisableSelect()">{{ disableSelect ? 'Вкл' : 'Выкл' }}</button>
+                    <div class="app__action-buttons">
+                        <button style="margin-right: 14px" (click)="open()">Открыть</button>
+                        <button style="width: 50px; margin-right: 14px" (click)="toggleDisableSelect()">{{ disableSelect ? 'Вкл' : 'Выкл' }}</button>
+                        <button (click)="resetSelect()">Сбросить значение</button>
+                    </div>
                     
                     <custom-select
                         label="Список шириной 300px"
                         placeholder="Выберите значение из списка"
                         width="300"
                         style="margin-top: 40px;"
+                        (selectionChange)="logEvent($event)"
                     >
-                        <custom-option value="1">ABC</custom-option>
-                        <custom-option value="2">sdsdf</custom-option>
-                        <custom-option value="3">LKJHsdasf</custom-option>
-                        <custom-option value="4">erwr</custom-option>
-                        <custom-option value="5">000000</custom-option>
-                        <custom-option value="6">LKJHsdasf000000 LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf</custom-option>
-                        <custom-option value="7">000000</custom-option>
-                        <custom-option value="8">000000</custom-option>
+                        <custom-option value="A">ABC</custom-option>
+                        <custom-option value="B">sdsdf</custom-option>
+                        <custom-option value="C">LKJHsdasf</custom-option>
+                        <custom-option value="D">erwr</custom-option>
+                        <custom-option>000000</custom-option>
+                        <custom-option>LKJHsdasf000000 LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf LKJHsdasf</custom-option>
                     </custom-select>
                 </div>
             </perfect-scrollbar>

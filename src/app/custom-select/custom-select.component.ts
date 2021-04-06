@@ -3,7 +3,9 @@ import {
   Component,
   ContentChildren,
   ElementRef,
+  EventEmitter,
   Input,
+  Output,
   QueryList,
   ViewChild
 } from '@angular/core';
@@ -26,6 +28,8 @@ export class CustomSelectComponent implements AfterViewInit {
 
   @ContentChildren(OptionComponent) public selectOptions: QueryList<OptionComponent>
   
+  @Output() public selectionChange = new EventEmitter();
+
   @Input() public selectedValue: string;
   @Input() public label: string;
   @Input() public placeholder: string;
@@ -60,18 +64,35 @@ export class CustomSelectComponent implements AfterViewInit {
   }
 
   showDropdown() {
-    this.dropdown.showDropdown();
-    this.opened = true;
-
-    if (!this.selectOptions.length) {
-      return;
+    if (!this.dropdown.isDropdownShowing) {
+      this.selectInput.nativeElement.focus();
+      this.dropdown.showDropdown();
+      this.opened = true;
+  
+      if (!this.selectOptions.length) {
+        return;
+      }
+      
+      this.selectedValue ? this._keyManager.setActiveItem(this.selectedOption) : this._keyManager.setFirstItemActive();
     }
-    
-    this.selectedValue ? this._keyManager.setActiveItem(this.selectedOption) : this._keyManager.setFirstItemActive();
+  }
+
+  hideDropDown() {
+    if (this.dropdown.isDropdownShowing) {
+      this.dropdown.hideDropdown();
+    }
   }
 
   onDropdownHide() {
     this.opened = false;
+  }
+
+  resetSelectValue() {
+    if (this.selectedOption) {
+      this.selectedValue = null;
+      this.selectedOption = null;
+      this.selectText = null;
+    }
   }
    
   onSelectClick(event) {
@@ -94,8 +115,7 @@ export class CustomSelectComponent implements AfterViewInit {
     }
 
     if (event.key === 'Enter' || event.key === ' ') {
-      this.selectedOption = this._keyManager.activeItem;
-      this.selectText = this.selectedOption ? this.selectedOption.optionText : '';
+      this.setSelectOption(this._keyManager.activeItem);
       this.dropdown.hideDropdown();
     } else if (event.key === 'Escape' || event.key === 'Esc') {
       this.dropdown.isDropdownShowing && this.dropdown.hideDropdown();
@@ -114,6 +134,7 @@ export class CustomSelectComponent implements AfterViewInit {
     this.selectText = option.optionText ? option.optionText : '';
     this.dropdown.hideDropdown();
     this.selectInput.nativeElement.focus();
+    this.selectionChange.emit({ text: this.selectText, value: this.selectedValue });
   }
   
 }

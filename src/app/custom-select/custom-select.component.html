@@ -3,7 +3,7 @@
         <label *ngIf="label" class="custom-select__label">{{label}}</label>
         <input #input
             placeholder={{placeholder}}
-            [value]="selectText"
+            [value]="selectText || placeholder"
             [disabled]="disabled"
             readonly
             autocomplete="off"
@@ -11,11 +11,11 @@
             (click)="onSelectClick($event)"
             (keydown)="onKeyDown($event)"
         >
-      <div class="custom-select__dropdown-icon" [class.opened]="opened" (click)="onSelectClick($event)">
+        <div class="custom-select__dropdown-icon" [class.opened]="opened" (click)="onSelectClick($event)">
         <svg class="custom-select__arrow" position="after" width="12" height="8" viewBox="0 0 12 8"
             fill="none" xmlns="http://www.w3.org/2000/svg"
         >
-            <path d="M11 1L6 6L1 1" stroke-width="2"></path>
+          <path d="M11 1L6 6L1 1" stroke-width="2"></path>
         </svg>
       </div>
       <custom-dropdown

@@ -24,6 +24,14 @@
         flex-direction: column;
         padding: 15px;
     }
+
+    &__action-buttons {
+        display: flex;
+        align-items: center;
+        margin-top: 16px;
+        display: flex;
+        width: 100%;
+    }
 }
 
 .header {

@@ -41,6 +41,7 @@ export class OptionComponent implements AfterViewInit, Highlightable {
   public optionText: string = '';
 
   constructor(private _selectDataTransferService: SelectDataTransferService) {
+    this.value ? this.value = this.value : this.value = "";
     this._select = this._selectDataTransferService.getSelectComponent();
   }
 

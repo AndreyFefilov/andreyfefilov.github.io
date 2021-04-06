@@ -27,12 +27,11 @@ export class DropdownComponent {
 
   constructor(protected overlay: Overlay) { }
 
-  @HostListener('window:resize')
-    public onWindowResize() {
+  @HostListener('window:resize') onWindowResize() {
     this.updateDropdownWidth();
   }
 
-  public showDropdown() {
+  showDropdown() {
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
     this.overlayRef.attach(this.contentTemplate);
     this.updateDropdownWidth();
@@ -40,7 +39,7 @@ export class DropdownComponent {
     this.isDropdownShowing = true;
  }
  
-  public hideDropdown() {
+  hideDropdown() {
     this.onDropdownHide.emit();
     setTimeout(() => {
       this.overlayRef.detach();
@@ -57,7 +56,7 @@ export class DropdownComponent {
     this.overlayRef.updateSize({ width: refRect.width });
   }
 
-  protected getOverlayConfig(): OverlayConfig {
+  getOverlayConfig(): OverlayConfig {
     const positionStrategy = this.overlay.position()
       .flexibleConnectedTo(this.selectInputRef)
       .withPush(false)
