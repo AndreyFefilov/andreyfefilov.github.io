@@ -3,13 +3,14 @@
         <label *ngIf="label" class="custom-select__label">{{label}}</label>
         <input #input
             placeholder={{placeholder}}
-            [value]="selectText || placeholder"
+            [value]="selectText"
             [disabled]="disabled"
             readonly
             autocomplete="off"
             [class.opened]="opened"
             (click)="onSelectClick($event)"
             (keydown)="onKeyDown($event)"
+            (blur)="onTouched()"
         >
         <div class="custom-select__dropdown-icon" [class.opened]="opened" (click)="onSelectClick($event)">
         <svg class="custom-select__arrow" position="after" width="12" height="8" viewBox="0 0 12 8"

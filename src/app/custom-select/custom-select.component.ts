@@ -4,24 +4,34 @@ import {
   ContentChildren,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Input,
   Output,
   QueryList,
+  Renderer2,
   ViewChild
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 
 import { SelectDataTransferService } from '../services/select-data-transfer.service';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { OptionComponent } from './option/option.component';
+import { SelectValue } from '../interfaces/select-value.interface';
 
 @Component({
   selector: 'custom-select',
   templateUrl: 'custom-select.component.html',
   styleUrls: ['custom-select.component.scss'],
-  providers: [SelectDataTransferService]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CustomSelectComponent),
+      multi: true
+    },
+    SelectDataTransferService]
 })
-export class CustomSelectComponent implements AfterViewInit {
+export class CustomSelectComponent implements AfterViewInit, ControlValueAccessor {
   @ViewChild('selectWrapperRef') public selectWrapperRef: ElementRef;
   @ViewChild('input') public selectInput: ElementRef;
   @ViewChild(DropdownComponent) public dropdown: DropdownComponent;
@@ -41,7 +51,10 @@ export class CustomSelectComponent implements AfterViewInit {
   public selectedOption: OptionComponent;
   public selectText: string;
 
-  constructor(private _selectDataTransferService: SelectDataTransferService) {
+  constructor(
+    private _selectDataTransferService: SelectDataTransferService,
+    private _renderer: Renderer2
+  ) {
     this._selectDataTransferService.registerSelectComponent(this);
   }
 
@@ -53,8 +66,7 @@ export class CustomSelectComponent implements AfterViewInit {
     }
     
     setTimeout(() => {
-      this.selectedOption = this.selectOptions.toArray().find(option => option.value === this.selectedValue);
-      this.selectText = this.selectedOption ? this.selectedOption.optionText : '';
+      this.selectText = '';
 
       this._keyManager = new ActiveDescendantKeyManager(this.selectOptions)
         .withHorizontalOrientation('ltr')
@@ -68,12 +80,6 @@ export class CustomSelectComponent implements AfterViewInit {
       this.selectInput.nativeElement.focus();
       this.dropdown.showDropdown();
       this.opened = true;
-  
-      if (!this.selectOptions.length) {
-        return;
-      }
-      
-      this.selectedValue ? this._keyManager.setActiveItem(this.selectedOption) : this._keyManager.setFirstItemActive();
     }
   }
 
@@ -89,8 +95,8 @@ export class CustomSelectComponent implements AfterViewInit {
 
   resetSelectValue() {
     if (this.selectedOption) {
+      this.selectedOption = null;
       this.selectedValue = null;
-      this.selectedOption = null;
       this.selectText = null;
     }
   }
@@ -116,7 +122,6 @@ export class CustomSelectComponent implements AfterViewInit {
 
     if (event.key === 'Enter' || event.key === ' ') {
       this.setSelectOption(this._keyManager.activeItem);
-      this.dropdown.hideDropdown();
     } else if (event.key === 'Escape' || event.key === 'Esc') {
       this.dropdown.isDropdownShowing && this.dropdown.hideDropdown();
     } else if (['ArrowUp', 'Up', 'ArrowDown', 'Down', 'ArrowRight', 'Right', 'ArrowLeft', 'Left']
@@ -134,7 +139,46 @@ export class CustomSelectComponent implements AfterViewInit {
     this.selectText = option.optionText ? option.optionText : '';
     this.dropdown.hideDropdown();
     this.selectInput.nativeElement.focus();
-    this.selectionChange.emit({ text: this.selectText, value: this.selectedValue });
+    this.onChange();
+    const selectValue = <SelectValue> {
+      text: this.selectText,
+      value: this.selectedValue
+    }
+    this.selectionChange.emit(selectValue);
+  }
+
+  onChangeFn = (_: any) => {};
+ 
+  onTouchedFn = () => {};
+ 
+  registerOnChange(fn: any) {
+    this.onChangeFn = fn;
+  }
+ 
+  registerOnTouched(fn: any) {
+    this.onTouchedFn = fn;
+  }
+ 
+  setDisabledState(isDisabled: boolean) {
+    this._renderer.setProperty(this.selectInput.nativeElement, 'disabled', isDisabled);
+  }
+ 
+  writeValue(obj) {
+    this.selectedOption = obj || null;
+    this.selectedValue = obj?.value || null;
+    this.selectText = obj?.text || null;
+  }
+ 
+  onTouched() {
+    this.onTouchedFn();
+  }
+ 
+  onChange() {
+    const selectValue = <SelectValue> {
+      text: this.selectText || "",
+      value: this.selectedValue || ""
+    };
+    this.onChangeFn(selectValue);
   }
   
 }
