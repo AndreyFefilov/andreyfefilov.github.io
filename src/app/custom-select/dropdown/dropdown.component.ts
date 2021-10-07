@@ -1,5 +1,9 @@
 import { CdkPortal } from '@angular/cdk/portal';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import {
+  Overlay,
+  OverlayConfig,
+  OverlayRef
+} from '@angular/cdk/overlay';
 import {
   Component,
   EventEmitter,
